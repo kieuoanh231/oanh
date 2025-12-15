@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import HaikuFeed from "@/components/HaikuFeed";
+import avatarShiki from "@/assets/avatar-shiki.jpg";
 
 const Index = () => {
   return (
@@ -19,7 +20,7 @@ const Index = () => {
                 <h3 className="font-medium text-sm mb-4">おすすめの俳人</h3>
                 <div className="space-y-4">
                   {[
-                    { name: "正岡子規", handle: "@shiki", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=100&h=100&fit=crop" },
+                    { name: "正岡子規", handle: "@shiki", avatar: avatarShiki },
                     { name: "高浜虚子", handle: "@kyoshi", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" },
                     { name: "山口誓子", handle: "@seishi", avatar: "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=100&h=100&fit=crop" },
                   ].map((user) => (
