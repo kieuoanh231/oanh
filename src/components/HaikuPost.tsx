@@ -62,7 +62,7 @@ const HaikuPost = ({
 
       {/* Haiku Text - Vertical Japanese Style */}
       <div className="px-6 py-6 flex justify-center">
-        <div className="haiku-text flex flex-row-reverse gap-6 h-48">
+        <div className="haiku-text flex flex-row-reverse gap-6">
           {haiku.map((line, index) => (
             <p 
               key={index} 
