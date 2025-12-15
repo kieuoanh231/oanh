@@ -120,10 +120,14 @@
 @layer components {
   .haiku-text {
     @apply font-serif-jp text-xl md:text-2xl leading-loose tracking-wider;
-    writing-mode: horizontal-tb;
   }
 
   .haiku-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  .writing-vertical-rl {
     writing-mode: vertical-rl;
     text-orientation: mixed;
   }
