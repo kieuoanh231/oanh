@@ -1,26 +1,18 @@
 import { Search, Bell, PenLine, User } from "lucide-react";
-
 const Header = () => {
-  return (
-    <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
+  return <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
       <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="hanko-stamp">俳</div>
-          <h1 className="font-serif text-xl font-medium tracking-wide">
-            俳句の庭
-          </h1>
+          <h1 className="font-serif text-xl font-medium tracking-wide">映え句</h1>
         </div>
 
         {/* Search */}
         <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="俳句を検索..."
-              className="input-comment pl-10"
-            />
+            <input type="text" placeholder="俳句を検索..." className="input-comment pl-10" />
           </div>
         </div>
 
@@ -41,8 +33,6 @@ const Header = () => {
           </button>
         </div>
       </div>
-    </header>
-  );
+    </header>;
 };
-
 export default Header;
