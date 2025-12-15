@@ -60,11 +60,17 @@ const HaikuPost = ({
         />
       </div>
 
-      {/* Haiku Text */}
-      <div className="px-6 py-6">
-        <div className="haiku-text text-center space-y-1">
+      {/* Haiku Text - Vertical Japanese Style */}
+      <div className="px-6 py-6 flex justify-center">
+        <div className="haiku-text flex flex-row-reverse gap-6 h-48">
           {haiku.map((line, index) => (
-            <p key={index} className="text-foreground">{line}</p>
+            <p 
+              key={index} 
+              className="text-foreground writing-vertical-rl text-2xl tracking-widest leading-loose"
+              style={{ writingMode: 'vertical-rl' }}
+            >
+              {line}
+            </p>
           ))}
         </div>
       </div>
