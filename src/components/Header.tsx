@@ -1,8 +1,16 @@
-import { Search, Bell, PenLine, User } from "lucide-react";
+import { Search, Bell, PenLine, User, LogIn, UserPlus, Info, LogOut, Settings } from "lucide-react";
 import CreatePostDialog from "./CreatePostDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
-  return <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
+  return (
+    <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
       <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
@@ -34,11 +42,43 @@ const Header = () => {
               </button>
             }
           />
-          <button className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">
-            <User className="w-5 h-5 text-muted-foreground" />
-          </button>
+          
+          {/* User Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors">
+                <User className="w-5 h-5 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48 bg-card border-border">
+              <DropdownMenuItem className="cursor-pointer">
+                <LogIn className="w-4 h-4 mr-2" />
+                ログイン
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <UserPlus className="w-4 h-4 mr-2" />
+                新規登録
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer">
+                <Info className="w-4 h-4 mr-2" />
+                プロフィール
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <Settings className="w-4 h-4 mr-2" />
+                設定
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer text-destructive">
+                <LogOut className="w-4 h-4 mr-2" />
+                ログアウト
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
-    </header>;
+    </header>
+  );
 };
+
 export default Header;
