@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Grid, List, Users, UserCheck, Calendar, Edit3 } from "lucide-react";
+import { Grid, List, Users, UserCheck, Calendar, Edit3, Heart, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Sample user data
 const userData = {
@@ -36,48 +35,69 @@ const followers = [
   { id: 4, name: "芥川龍之介", avatar: "/placeholder.svg" },
 ];
 
-// Sample posts with dates
+// Sample posts with dates and explanation
 const userPosts = [
   {
     id: 1,
     lines: ["古池や", "蛙飛び込む", "水の音"],
     image: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400",
-    createdAt: "2024年3月15日",
+    createdAt: "令和六年三月十五日",
+    createdAtShort: "2024年3月15日",
     editedAt: null,
     likes: 156,
     comments: 23,
+    explanation: "静寂な古池に蛙が飛び込む瞬間の音を詠んだ、松尾芭蕉の代表作。静と動の対比が美しい。",
   },
   {
     id: 2,
     lines: ["夏草や", "兵どもが", "夢の跡"],
     image: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400",
-    createdAt: "2024年3月10日",
+    createdAt: "令和六年三月十日",
+    createdAtShort: "2024年3月10日",
     editedAt: "2024年3月12日",
     likes: 89,
     comments: 12,
+    explanation: "平泉にて詠まれた句。かつての栄華も今は夏草に覆われ、武士たちの夢も消え去った感慨を表現。",
   },
   {
     id: 3,
     lines: ["閑さや", "岩にしみ入る", "蝉の声"],
     image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
-    createdAt: "2024年3月5日",
+    createdAt: "令和六年三月五日",
+    createdAtShort: "2024年3月5日",
     editedAt: null,
     likes: 234,
     comments: 45,
+    explanation: "山寺での静寂の中、蝉の声が岩に染み入るような感覚を詠んだ句。",
   },
   {
     id: 4,
     lines: ["荒海や", "佐渡によこたふ", "天の河"],
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
-    createdAt: "2024年2月28日",
+    createdAt: "令和六年二月二十八日",
+    createdAtShort: "2024年2月28日",
     editedAt: null,
     likes: 178,
     comments: 31,
+    explanation: "荒れた日本海の向こうに佐渡島が横たわり、その上に天の川が流れる壮大な景色を詠んだ句。",
   },
 ];
 
 const Profile = () => {
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  const [expandedExplanations, setExpandedExplanations] = useState<Set<number>>(new Set());
+
+  const toggleExplanation = (postId: number) => {
+    setExpandedExplanations(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(postId)) {
+        newSet.delete(postId);
+      } else {
+        newSet.add(postId);
+      }
+      return newSet;
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -169,61 +189,177 @@ const Profile = () => {
                   {viewMode === "grid" ? (
                     // Grid View
                     <div>
-                      <div className="aspect-square relative">
+                      <div className="aspect-[4/5] relative">
                         <img
                           src={post.image}
                           alt="Haiku"
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        <div className="absolute bottom-4 right-4 haiku-vertical text-white text-shadow">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                        <div className="absolute bottom-6 right-6 flex flex-row-reverse items-end gap-3">
                           {post.lines.map((line, i) => (
-                            <p key={i} className="text-lg">{line}</p>
+                            <p 
+                              key={i} 
+                              className="text-white text-xl drop-shadow-lg"
+                              style={{ 
+                                writingMode: 'vertical-rl',
+                                fontFamily: '"Yuji Syuku", serif',
+                                textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+                              }}
+                            >
+                              {line}
+                            </p>
                           ))}
+                          {/* Vertical date in Japanese */}
+                          <p 
+                            className="text-white/70 text-xs"
+                            style={{ 
+                              writingMode: 'vertical-rl',
+                              fontFamily: '"Noto Serif JP", serif'
+                            }}
+                          >
+                            {post.createdAt}
+                          </p>
                         </div>
                       </div>
-                      <div className="p-3 flex items-center justify-between text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {post.createdAt}
-                        </div>
-                        {post.editedAt && (
-                          <div className="flex items-center gap-1">
-                            <Edit3 className="w-3 h-3" />
-                            編集済
-                          </div>
+                      {/* Explanation toggle */}
+                      <div className="px-4 py-3 border-b border-border">
+                        <button
+                          onClick={() => toggleExplanation(post.id)}
+                          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          {expandedExplanations.has(post.id) ? (
+                            <>
+                              <ChevronUp className="w-3 h-3" />
+                              <span>解説を隠す</span>
+                            </>
+                          ) : (
+                            <>
+                              <ChevronDown className="w-3 h-3" />
+                              <span>解説を表示</span>
+                            </>
+                          )}
+                        </button>
+                        {expandedExplanations.has(post.id) && (
+                          <p className="text-sm text-muted-foreground leading-relaxed mt-2 animate-fade-in">
+                            {post.explanation}
+                          </p>
                         )}
+                      </div>
+                      <div className="p-3 flex items-center justify-between text-sm text-muted-foreground">
+                        <div className="flex items-center gap-4">
+                          <span className="flex items-center gap-1">
+                            <Heart className="w-4 h-4" />
+                            {post.likes}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MessageCircle className="w-4 h-4" />
+                            {post.comments}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {post.editedAt ? (
+                            <>
+                              <Edit3 className="w-3 h-3" />
+                              <span>{post.editedAt}</span>
+                            </>
+                          ) : (
+                            <>
+                              <Calendar className="w-3 h-3" />
+                              <span>{post.createdAtShort}</span>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ) : (
-                    // List View
+                    // List View - Larger with dynamic height
                     <div className="flex">
-                      <div className="w-32 h-32 flex-shrink-0">
+                      {/* Image takes ~40% width */}
+                      <div className="w-[40%] flex-shrink-0">
                         <img
                           src={post.image}
                           alt="Haiku"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover min-h-[200px]"
                         />
                       </div>
-                      <div className="flex-1 p-4 flex flex-col justify-between">
-                        <div className="haiku-vertical h-20">
-                          {post.lines.map((line, i) => (
-                            <p key={i} className="text-base">{line}</p>
-                          ))}
-                        </div>
-                        <div className="flex items-center justify-between text-sm text-muted-foreground mt-2">
-                          <div className="flex items-center gap-4">
-                            <span>♥ {post.likes}</span>
-                            <span>💬 {post.comments}</span>
+                      <div className="flex-1 flex flex-col">
+                        {/* Haiku section with calligraphy font */}
+                        <div className="flex-1 p-6 flex justify-center items-center">
+                          <div className="flex flex-row-reverse items-start gap-4">
+                            {post.lines.map((line, i) => (
+                              <p 
+                                key={i} 
+                                className="text-foreground text-2xl tracking-wider leading-loose"
+                                style={{ 
+                                  writingMode: 'vertical-rl',
+                                  fontFamily: '"Yuji Syuku", serif'
+                                }}
+                              >
+                                {line}
+                              </p>
+                            ))}
+                            {/* Vertical date in Japanese at end of haiku */}
+                            <p 
+                              className="text-muted-foreground text-xs self-end"
+                              style={{ 
+                                writingMode: 'vertical-rl',
+                                fontFamily: '"Noto Serif JP", serif'
+                              }}
+                            >
+                              {post.createdAt}
+                            </p>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-3 h-3" />
-                            <span>{post.createdAt}</span>
-                            {post.editedAt && (
-                              <span className="flex items-center gap-1">
+                        </div>
+                        
+                        {/* Explanation section */}
+                        <div className="px-6 pb-3 border-t border-border pt-3">
+                          <button
+                            onClick={() => toggleExplanation(post.id)}
+                            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            {expandedExplanations.has(post.id) ? (
+                              <>
+                                <ChevronUp className="w-3 h-3" />
+                                <span>解説を隠す</span>
+                              </>
+                            ) : (
+                              <>
+                                <ChevronDown className="w-3 h-3" />
+                                <span>解説を表示</span>
+                              </>
+                            )}
+                          </button>
+                          {expandedExplanations.has(post.id) && (
+                            <p className="text-sm text-muted-foreground leading-relaxed mt-2 animate-fade-in">
+                              {post.explanation}
+                            </p>
+                          )}
+                        </div>
+                        
+                        {/* Footer with likes, comments, date */}
+                        <div className="px-6 py-3 border-t border-border flex items-center justify-between text-sm text-muted-foreground">
+                          <div className="flex items-center gap-4">
+                            <span className="flex items-center gap-1">
+                              <Heart className="w-4 h-4" />
+                              {post.likes}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MessageCircle className="w-4 h-4" />
+                              {post.comments}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {post.editedAt ? (
+                              <>
                                 <Edit3 className="w-3 h-3" />
-                                {post.editedAt}
-                              </span>
+                                <span>{post.editedAt}</span>
+                              </>
+                            ) : (
+                              <>
+                                <Calendar className="w-3 h-3" />
+                                <span>{post.createdAtShort}</span>
+                              </>
                             )}
                           </div>
                         </div>
