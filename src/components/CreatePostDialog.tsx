@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { PenLine, Image, X } from "lucide-react";
+import { PenLine, X, LayoutTemplate } from "lucide-react";
 
 const FONT_OPTIONS = [
   { name: "Noto Serif JP", value: "'Noto Serif JP', serif", preview: "明朝体" },
@@ -14,6 +14,13 @@ const FONT_OPTIONS = [
   { name: "Shippori Mincho", value: "'Shippori Mincho', serif", preview: "しっぽり" },
 ];
 
+const LAYOUT_OPTIONS = [
+  { id: "overlay", name: "画像の上", icon: "📸", description: "文字を画像の上に重ねる" },
+  { id: "below", name: "画像の下", icon: "⬇️", description: "文字を画像の下に配置" },
+  { id: "left", name: "画像の左", icon: "⬅️", description: "文字を画像の左に配置" },
+  { id: "right", name: "画像の右", icon: "➡️", description: "文字を画像の右に配置" },
+];
+
 interface CreatePostDialogProps {
   trigger: React.ReactNode;
 }
@@ -21,6 +28,7 @@ interface CreatePostDialogProps {
 const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
   const [open, setOpen] = useState(false);
   const [selectedFont, setSelectedFont] = useState(FONT_OPTIONS[0]);
+  const [selectedLayout, setSelectedLayout] = useState(LAYOUT_OPTIONS[0]);
   const [haikuLines, setHaikuLines] = useState(["", "", ""]);
   const [explanation, setExplanation] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -33,13 +41,14 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
 
   const handleSubmit = () => {
     // TODO: Submit logic
-    console.log({ haikuLines, explanation, imageUrl, font: selectedFont });
+    console.log({ haikuLines, explanation, imageUrl, font: selectedFont, layout: selectedLayout });
     setOpen(false);
     // Reset form
     setHaikuLines(["", "", ""]);
     setExplanation("");
     setImageUrl("");
     setSelectedFont(FONT_OPTIONS[0]);
+    setSelectedLayout(LAYOUT_OPTIONS[0]);
   };
 
   const isValid = haikuLines.every(line => line.trim()) && explanation.trim();
@@ -160,6 +169,35 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
                 />
               </div>
             )}
+          </div>
+
+          {/* Layout Selection */}
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-foreground flex items-center gap-2">
+              <LayoutTemplate className="w-4 h-4" />
+              レイアウトを選択
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {LAYOUT_OPTIONS.map((layout) => (
+                <button
+                  key={layout.id}
+                  onClick={() => setSelectedLayout(layout)}
+                  className={`p-3 rounded-lg border-2 transition-all text-left ${
+                    selectedLayout.id === layout.id
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary/50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-lg">{layout.icon}</span>
+                    <span className="font-medium text-sm">{layout.name}</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    {layout.description}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Submit Button */}

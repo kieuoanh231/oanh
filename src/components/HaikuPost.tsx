@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, MessageCircle, Share2, Bookmark } from "lucide-react";
+import { Heart, MessageCircle, Share2, Bookmark, ChevronDown, ChevronUp } from "lucide-react";
 import CommentSection from "./CommentSection";
 
 interface HaikuPostProps {
@@ -30,6 +30,7 @@ const HaikuPost = ({
   const [likeCount, setLikeCount] = useState(initialLikes);
   const [isSaved, setIsSaved] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(true);
 
   const handleLike = () => {
     setIsLiked(!isLiked);
@@ -75,11 +76,29 @@ const HaikuPost = ({
         </div>
       </div>
 
-      {/* Explanation */}
+      {/* Explanation Toggle */}
       <div className="px-4 pb-4">
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {explanation}
-        </p>
+        <button
+          onClick={() => setShowExplanation(!showExplanation)}
+          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mb-2"
+        >
+          {showExplanation ? (
+            <>
+              <ChevronUp className="w-3 h-3" />
+              <span>解説を隠す</span>
+            </>
+          ) : (
+            <>
+              <ChevronDown className="w-3 h-3" />
+              <span>解説を表示</span>
+            </>
+          )}
+        </button>
+        {showExplanation && (
+          <p className="text-sm text-muted-foreground leading-relaxed animate-fade-in">
+            {explanation}
+          </p>
+        )}
       </div>
 
       {/* Action Buttons */}
