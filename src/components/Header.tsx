@@ -1,4 +1,5 @@
-import { Search, Bell, PenLine, User, LogIn, UserPlus, Info, LogOut, Settings } from "lucide-react";
+import { Search, Bell, PenLine, User, LogIn, UserPlus, LogOut, Settings } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import CreatePostDialog from "./CreatePostDialog";
 import {
   DropdownMenu,
@@ -9,6 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
       <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -60,9 +63,9 @@ const Header = () => {
                 新規登録
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                <Info className="w-4 h-4 mr-2" />
-                プロフィール
+              <DropdownMenuItem className="cursor-pointer" onClick={() => navigate("/profile")}>
+                <User className="w-4 h-4 mr-2" />
+                マイページ
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
                 <Settings className="w-4 h-4 mr-2" />
