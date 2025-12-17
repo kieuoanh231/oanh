@@ -11,6 +11,7 @@ interface HaikuPostProps {
   };
   haiku: string[];
   image: string;
+  imageOrientation?: 'horizontal' | 'vertical';
   explanation: string;
   likes: number;
   comments: number;
@@ -51,6 +52,7 @@ const HaikuPost = ({
   author,
   haiku,
   image,
+  imageOrientation = 'horizontal',
   explanation,
   likes: initialLikes,
   comments,
@@ -95,7 +97,7 @@ const HaikuPost = ({
         <div className="absolute inset-0 bg-gradient-to-bl from-black/50 via-transparent to-black/40 z-10 pointer-events-none" />
         
         {/* Main Image with zoom animation */}
-        <div className="aspect-[4/3] overflow-hidden">
+        <div className={`overflow-hidden ${imageOrientation === 'vertical' ? 'aspect-[3/4]' : 'aspect-[4/3]'}`}>
           <img
             src={image}
             alt="Haiku illustration"
