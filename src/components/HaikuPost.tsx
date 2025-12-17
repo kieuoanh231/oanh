@@ -17,7 +17,23 @@ interface HaikuPostProps {
   timestamp: string;
 }
 
-// Convert to Japanese era date (Reiwa format)
+// Convert number to kanji
+const toKanjiNumber = (num: number): string => {
+  const kanjiDigits = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+  const kanjiUnits = ['', '十', '百', '千'];
+  
+  if (num === 0) return kanjiDigits[0];
+  if (num < 10) return kanjiDigits[num];
+  if (num < 100) {
+    const tens = Math.floor(num / 10);
+    const ones = num % 10;
+    const tensStr = tens === 1 ? '十' : kanjiDigits[tens] + '十';
+    return tensStr + (ones > 0 ? kanjiDigits[ones] : '');
+  }
+  return String(num);
+};
+
+// Convert to Japanese era date (Reiwa format) with kanji numbers
 const toJapaneseEraDate = (dateStr: string): string => {
   const now = new Date();
   const reiwaStart = new Date(2019, 4, 1); // May 1, 2019
@@ -26,7 +42,7 @@ const toJapaneseEraDate = (dateStr: string): string => {
     const reiwaYear = now.getFullYear() - 2018;
     const month = now.getMonth() + 1;
     const day = now.getDate();
-    return `令和${reiwaYear}年${month}月${day}日`;
+    return `令和${toKanjiNumber(reiwaYear)}年${toKanjiNumber(month)}月${toKanjiNumber(day)}日`;
   }
   return dateStr;
 };
