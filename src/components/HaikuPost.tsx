@@ -17,6 +17,20 @@ interface HaikuPostProps {
   timestamp: string;
 }
 
+// Convert to Japanese era date (Reiwa format)
+const toJapaneseEraDate = (dateStr: string): string => {
+  const now = new Date();
+  const reiwaStart = new Date(2019, 4, 1); // May 1, 2019
+  
+  if (now >= reiwaStart) {
+    const reiwaYear = now.getFullYear() - 2018;
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    return `令和${reiwaYear}年${month}月${day}日`;
+  }
+  return dateStr;
+};
+
 const HaikuPost = ({
   author,
   haiku,
@@ -31,11 +45,14 @@ const HaikuPost = ({
   const [isSaved, setIsSaved] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showExplanation, setShowExplanation] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleLike = () => {
     setIsLiked(!isLiked);
     setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
   };
+
+  const japaneseDate = toJapaneseEraDate(timestamp);
 
   return (
     <article className="card-haiku animate-fade-in">
@@ -44,7 +61,7 @@ const HaikuPost = ({
         <img
           src={author.avatar}
           alt={author.name}
-          className="w-10 h-10 rounded-full object-cover"
+          className="w-10 h-10 rounded-full object-cover ring-2 ring-primary/20"
         />
         <div className="flex-1">
           <p className="font-medium text-sm">{author.name}</p>
@@ -52,32 +69,67 @@ const HaikuPost = ({
         </div>
       </div>
 
-      {/* Image */}
-      <div className="aspect-[4/3] bg-muted overflow-hidden">
-        <img
-          src={image}
-          alt="Haiku illustration"
-          className="w-full h-full object-cover"
-        />
-      </div>
+      {/* Image with Haiku Overlay */}
+      <div 
+        className="relative mx-4 rounded-2xl overflow-hidden shadow-lg group cursor-pointer"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Background gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-bl from-black/50 via-transparent to-black/40 z-10 pointer-events-none" />
+        
+        {/* Main Image with zoom animation */}
+        <div className="aspect-[4/3] overflow-hidden">
+          <img
+            src={image}
+            alt="Haiku illustration"
+            className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
+              isHovered ? 'scale-110' : 'scale-100'
+            }`}
+          />
+        </div>
 
-      {/* Haiku Text - Vertical Japanese Style */}
-      <div className="px-6 py-6 flex justify-center">
-        <div className="haiku-text flex flex-row-reverse gap-6">
-          {haiku.map((line, index) => (
-            <p 
-              key={index} 
-              className="text-foreground writing-vertical-rl text-2xl tracking-widest leading-loose"
-              style={{ writingMode: 'vertical-rl' }}
-            >
-              {line}
-            </p>
-          ))}
+        {/* Haiku Text - Top Right */}
+        <div className="absolute top-4 right-4 z-20">
+          <div className="flex flex-row-reverse gap-3">
+            {haiku.map((line, index) => (
+              <p 
+                key={index} 
+                className="text-white text-xl md:text-2xl tracking-widest leading-relaxed drop-shadow-lg"
+                style={{ 
+                  writingMode: 'vertical-rl',
+                  fontFamily: '"Yuji Syuku", serif',
+                  textShadow: '2px 2px 8px rgba(0,0,0,0.7), 0 0 20px rgba(0,0,0,0.5)'
+                }}
+              >
+                {line}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        {/* Japanese Era Date - Bottom Left */}
+        <div className="absolute bottom-4 left-4 z-20">
+          <p 
+            className="text-white/90 text-sm tracking-wider drop-shadow-lg"
+            style={{ 
+              writingMode: 'vertical-rl',
+              fontFamily: '"Yuji Syuku", serif',
+              textShadow: '1px 1px 4px rgba(0,0,0,0.8)'
+            }}
+          >
+            {japaneseDate}
+          </p>
+        </div>
+
+        {/* Subtle decorative corner accent */}
+        <div className="absolute bottom-0 right-0 w-16 h-16 z-10 pointer-events-none">
+          <div className="absolute bottom-2 right-2 w-8 h-8 border-r-2 border-b-2 border-white/30 rounded-br-lg" />
         </div>
       </div>
 
       {/* Explanation Toggle */}
-      <div className="px-4 pb-4">
+      <div className="px-4 py-4">
         <button
           onClick={() => setShowExplanation(!showExplanation)}
           className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mb-2"
@@ -95,7 +147,7 @@ const HaikuPost = ({
           )}
         </button>
         {showExplanation && (
-          <p className="text-sm text-muted-foreground leading-relaxed animate-fade-in">
+          <p className="text-sm text-muted-foreground leading-relaxed animate-fade-in pl-1 border-l-2 border-primary/30">
             {explanation}
           </p>
         )}
