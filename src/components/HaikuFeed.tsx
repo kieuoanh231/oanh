@@ -62,7 +62,7 @@ const samplePosts = [
     id: 4,
     author: {
       name: "正岡子規",
-      avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=100&h=100&fit=crop",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
       handle: "@shiki_modern",
     },
     haiku: [

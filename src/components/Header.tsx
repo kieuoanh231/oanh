@@ -18,7 +18,7 @@ const Header = () => {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="hanko-stamp">俳</div>
-          <h1 className="font-serif text-xl font-medium tracking-wide">映え句</h1>
+          <h1 className="font-serif text-xl font-medium tracking-wide" onClick={() => navigate("/")}>映え句</h1>
         </div>
 
         {/* Search */}

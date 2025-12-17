@@ -113,7 +113,7 @@ const HaikuPost = ({
             {haiku.map((line, index) => (
               <p 
                 key={index} 
-                className="text-white text-xl md:text-2xl tracking-widest leading-relaxed drop-shadow-lg"
+                className="text-white text-2xl md:text-4xl tracking-widest leading-relaxed drop-shadow-lg"
                 style={{ 
                   writingMode: 'vertical-rl',
                   fontFamily: '"Yuji Syuku", serif',
@@ -194,7 +194,7 @@ const HaikuPost = ({
           </button>
 
           <button className="btn-action">
-            <Share2 className="w-5 h-5" />
+             <Bookmark className="w-5 h-5" />
           </button>
         </div>
 
@@ -202,7 +202,7 @@ const HaikuPost = ({
           onClick={() => setIsSaved(!isSaved)}
           className={`btn-action ${isSaved ? 'btn-action-active' : ''}`}
         >
-          <Bookmark className={`w-5 h-5 ${isSaved ? 'fill-primary' : ''}`} />
+         <Share2 className="w-5 h-5" />
         </button>
       </div>
 

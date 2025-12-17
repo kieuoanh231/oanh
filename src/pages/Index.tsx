@@ -56,7 +56,7 @@ const Index = () => {
                 <a href="#" className="hover:underline">プライバシー</a>
                 <a href="#" className="hover:underline">ヘルプ</a>
               </div>
-              <p className="text-xs text-muted-foreground mt-2">© 2024 俳句の庭</p>
+              <p className="text-xs text-muted-foreground mt-2">© 2024 映え句</p>
             </div>
           </aside>
         </div>

@@ -43,7 +43,7 @@ const userPosts = [
     lines: ["古池や", "蛙飛び込む", "水の音"],
     image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600",
     createdAt: "令和六年三月十五日",
-    createdAtShort: "2024年3月15日",
+    createdAtShort: "2024/3/15",
     editedAt: null,
     likes: 156,
     comments: 23,
@@ -54,8 +54,8 @@ const userPosts = [
     lines: ["夏草や", "兵どもが", "夢の跡"],
     image: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600",
     createdAt: "令和六年三月十日",
-    createdAtShort: "2024年3月10日",
-    editedAt: "2024年3月12日",
+    createdAtShort: "2024/3/10",
+    editedAt: "2024/3/12",
     likes: 89,
     comments: 12,
     explanation: "平泉にて詠まれた句。かつての栄華も今は夏草に覆われ、武士たちの夢も消え去った感慨を表現。",
@@ -65,7 +65,7 @@ const userPosts = [
     lines: ["閑さや", "岩にしみ入る", "蝉の声"],
     image: "https://images.unsplash.com/photo-1480796927426-f609979314bd?w=600",
     createdAt: "令和六年三月五日",
-    createdAtShort: "2024年3月5日",
+    createdAtShort: "2024/3/5",
     editedAt: null,
     likes: 234,
     comments: 45,
@@ -76,8 +76,8 @@ const userPosts = [
     lines: ["荒海や", "佐渡によこたふ", "天の河"],
     image: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=600",
     createdAt: "令和六年二月二十八日",
-    createdAtShort: "2024年2月28日",
-    editedAt: null,
+    createdAtShort: "2024/3/10",
+    editedAt: "2024/3/12",
     likes: 178,
     comments: 31,
     explanation: "荒れた日本海の向こうに佐渡島が横たわり、その上に天の川が流れる壮大な景色を詠んだ句。",
@@ -238,7 +238,7 @@ const Profile = () => {
                             <PopoverTrigger asChild>
                               <button className="flex items-center gap-1 hover:text-foreground transition-colors">
                                 <BookOpen className="w-4 h-4" />
-                                <span className="text-xs">解説</span>
+                                {/* <span className="text-xs">解説</span> */}
                               </button>
                             </PopoverTrigger>
                             <PopoverContent className="w-72 p-3" side="top">
