@@ -95,7 +95,7 @@ const Profile = () => {
       <main className="flex-1 max-w-6xl mx-auto px-4 py-4 overflow-hidden w-full">
         <div className="flex flex-col lg:flex-row gap-4 h-full">
           {/* Left Sidebar - Friends & Followers - Independent Scroll */}
-          <aside className="lg:w-56 flex-shrink-0 h-full overflow-y-auto scrollbar-thin">
+          <aside className="lg:w-56 flex-shrink-0 h-full overflow-y-auto scrollbar-hide">
             <div className="space-y-4">
               {/* Friends */}
               <div className="haiku-card p-3">
@@ -144,7 +144,7 @@ const Profile = () => {
           </aside>
 
           {/* Main Content - Posts - Independent Scroll */}
-          <div className="flex-1 h-full overflow-y-auto scrollbar-thin">
+          <div className="flex-1 h-full overflow-y-auto scrollbar-hide">
             {/* View Mode Toggle */}
             <div className="flex items-center justify-between mb-4 sticky top-0 bg-background py-2 z-10">
               <h2 className="font-serif text-lg font-medium">投稿一覧</h2>
@@ -352,7 +352,7 @@ const Profile = () => {
           </div>
 
           {/* Right Sidebar - Personal Info - Independent Scroll */}
-          <aside className="lg:w-60 flex-shrink-0 h-full overflow-y-auto scrollbar-thin">
+          <aside className="lg:w-60 flex-shrink-0 h-full overflow-y-auto scrollbar-hide">
             <div className="space-y-4">
               <div className="haiku-card p-4">
                 <div className="text-center mb-4">
