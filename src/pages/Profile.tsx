@@ -89,80 +89,82 @@ const Profile = () => {
   const [hoveredPost, setHoveredPost] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen flex flex-col bg-background">
       <Header />
       
-      <main className="max-w-6xl mx-auto px-4 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left Sidebar - Friends & Followers */}
-          <aside className="lg:w-64 space-y-6">
-            {/* Friends */}
-            <div className="haiku-card p-4">
-              <div className="flex items-center gap-2 mb-4">
-                <Users className="w-5 h-5 text-primary" />
-                <h3 className="font-serif font-medium">友達</h3>
-                <span className="text-sm text-muted-foreground">({friends.length})</span>
+      <main className="flex-1 max-w-6xl mx-auto px-4 py-4 overflow-hidden w-full">
+        <div className="flex flex-col lg:flex-row gap-4 h-full">
+          {/* Left Sidebar - Friends & Followers - Independent Scroll */}
+          <aside className="lg:w-56 flex-shrink-0 h-full overflow-y-auto scrollbar-thin">
+            <div className="space-y-4">
+              {/* Friends */}
+              <div className="haiku-card p-3">
+                <div className="flex items-center gap-2 mb-3">
+                  <Users className="w-4 h-4 text-primary" />
+                  <h3 className="font-serif font-medium text-sm">友達</h3>
+                  <span className="text-xs text-muted-foreground">({friends.length})</span>
+                </div>
+                <div className="space-y-2">
+                  {friends.map((friend) => (
+                    <div key={friend.id} className="flex items-center gap-2">
+                      <Avatar className="w-7 h-7">
+                        <AvatarImage src={friend.avatar} />
+                        <AvatarFallback className="bg-secondary text-xs">
+                          {friend.name[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-xs">{friend.name}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-3">
-                {friends.map((friend) => (
-                  <div key={friend.id} className="flex items-center gap-3">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={friend.avatar} />
-                      <AvatarFallback className="bg-secondary text-xs">
-                        {friend.name[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm">{friend.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
 
-            {/* Followers */}
-            <div className="haiku-card p-4">
-              <div className="flex items-center gap-2 mb-4">
-                <UserCheck className="w-5 h-5 text-primary" />
-                <h3 className="font-serif font-medium">フォロワー</h3>
-                <span className="text-sm text-muted-foreground">({followers.length})</span>
-              </div>
-              <div className="space-y-3">
-                {followers.map((follower) => (
-                  <div key={follower.id} className="flex items-center gap-3">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={follower.avatar} />
-                      <AvatarFallback className="bg-secondary text-xs">
-                        {follower.name[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm">{follower.name}</span>
-                  </div>
-                ))}
+              {/* Followers */}
+              <div className="haiku-card p-3">
+                <div className="flex items-center gap-2 mb-3">
+                  <UserCheck className="w-4 h-4 text-primary" />
+                  <h3 className="font-serif font-medium text-sm">フォロワー</h3>
+                  <span className="text-xs text-muted-foreground">({followers.length})</span>
+                </div>
+                <div className="space-y-2">
+                  {followers.map((follower) => (
+                    <div key={follower.id} className="flex items-center gap-2">
+                      <Avatar className="w-7 h-7">
+                        <AvatarImage src={follower.avatar} />
+                        <AvatarFallback className="bg-secondary text-xs">
+                          {follower.name[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-xs">{follower.name}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </aside>
 
-          {/* Main Content - Posts */}
-          <div className="flex-1">
+          {/* Main Content - Posts - Independent Scroll */}
+          <div className="flex-1 h-full overflow-y-auto scrollbar-thin">
             {/* View Mode Toggle */}
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-serif text-xl font-medium">投稿一覧</h2>
+            <div className="flex items-center justify-between mb-4 sticky top-0 bg-background py-2 z-10">
+              <h2 className="font-serif text-lg font-medium">投稿一覧</h2>
               <div className="flex items-center gap-2 bg-secondary rounded-lg p-1">
                 <Button
                   variant={viewMode === "list" ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setViewMode("list")}
-                  className="px-3"
+                  className="px-2 text-xs"
                 >
-                  <List className="w-4 h-4 mr-1" />
+                  <List className="w-3 h-3 mr-1" />
                   リスト
                 </Button>
                 <Button
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setViewMode("grid")}
-                  className="px-3"
+                  className="px-2 text-xs"
                 >
-                  <Grid className="w-4 h-4 mr-1" />
+                  <Grid className="w-3 h-3 mr-1" />
                   グリッド
                 </Button>
               </div>
@@ -170,8 +172,8 @@ const Profile = () => {
 
             {/* Posts */}
             <div className={viewMode === "grid" 
-              ? "grid grid-cols-1 sm:grid-cols-2 gap-4" 
-              : "space-y-4"
+              ? "grid grid-cols-1 sm:grid-cols-2 gap-3" 
+              : "space-y-3"
             }>
               {userPosts.map((post) => (
                 <div key={post.id} className="haiku-card overflow-hidden">
@@ -223,22 +225,21 @@ const Profile = () => {
                       </div>
                       
                       {/* Footer with explanation popover */}
-                      <div className="p-3 flex items-center justify-between text-sm text-muted-foreground">
-                        <div className="flex items-center gap-4">
+                      <div className="p-2 flex items-center justify-between text-xs text-muted-foreground">
+                        <div className="flex items-center gap-3">
                           <span className="flex items-center gap-1">
-                            <Heart className="w-4 h-4" />
+                            <Heart className="w-3 h-3" />
                             {post.likes}
                           </span>
                           <span className="flex items-center gap-1">
-                            <MessageCircle className="w-4 h-4" />
+                            <MessageCircle className="w-3 h-3" />
                             {post.comments}
                           </span>
                           {/* Explanation Popover */}
                           <Popover>
                             <PopoverTrigger asChild>
                               <button className="flex items-center gap-1 hover:text-foreground transition-colors">
-                                <BookOpen className="w-4 h-4" />
-                                {/* <span className="text-xs">解説</span> */}
+                                <BookOpen className="w-3 h-3" />
                               </button>
                             </PopoverTrigger>
                             <PopoverContent className="w-72 p-3" side="top">
@@ -269,17 +270,17 @@ const Profile = () => {
                         <img
                           src={post.image}
                           alt="Haiku"
-                          className="w-full h-full object-cover min-h-[200px]"
+                          className="w-full h-full object-cover min-h-[180px]"
                         />
                       </div>
                       <div className="flex-1 flex flex-col">
                         {/* Haiku section with calligraphy font */}
-                        <div className="flex-1 p-6 flex justify-center items-center">
-                          <div className="flex flex-row-reverse items-start gap-4">
+                        <div className="flex-1 p-4 flex justify-center items-center">
+                          <div className="flex flex-row-reverse items-start gap-3">
                             {post.lines.map((line, i) => (
                               <p 
                                 key={i} 
-                                className="text-foreground text-2xl tracking-wider leading-loose"
+                                className="text-foreground text-xl tracking-wider leading-loose"
                                 style={{ 
                                   writingMode: 'vertical-rl',
                                   fontFamily: '"Yuji Syuku", serif'
@@ -302,7 +303,7 @@ const Profile = () => {
                         </div>
                         
                         {/* Explanation popover section */}
-                        <div className="px-6 pb-3 border-t border-border pt-3">
+                        <div className="px-4 pb-2 border-t border-border pt-2">
                           <Popover>
                             <PopoverTrigger asChild>
                               <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
@@ -317,14 +318,14 @@ const Profile = () => {
                         </div>
                         
                         {/* Footer with likes, comments, date */}
-                        <div className="px-6 py-3 border-t border-border flex items-center justify-between text-sm text-muted-foreground">
-                          <div className="flex items-center gap-4">
+                        <div className="px-4 py-2 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+                          <div className="flex items-center gap-3">
                             <span className="flex items-center gap-1">
-                              <Heart className="w-4 h-4" />
+                              <Heart className="w-3 h-3" />
                               {post.likes}
                             </span>
                             <span className="flex items-center gap-1">
-                              <MessageCircle className="w-4 h-4" />
+                              <MessageCircle className="w-3 h-3" />
                               {post.comments}
                             </span>
                           </div>
@@ -350,80 +351,82 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Right Sidebar - Personal Info */}
-          <aside className="lg:w-72 space-y-6">
-            <div className="haiku-card p-6 sticky top-24">
-              <div className="text-center mb-6">
-                <Avatar className="w-24 h-24 mx-auto mb-4 border-4 border-primary/20">
-                  <AvatarImage src={userData.avatar} />
-                  <AvatarFallback className="bg-secondary text-2xl">
-                    {userData.name[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <h2 className="font-serif text-xl font-medium">{userData.name}</h2>
-                <p className="text-muted-foreground text-sm">{userData.username}</p>
-              </div>
+          {/* Right Sidebar - Personal Info - Independent Scroll */}
+          <aside className="lg:w-60 flex-shrink-0 h-full overflow-y-auto scrollbar-thin">
+            <div className="space-y-4">
+              <div className="haiku-card p-4">
+                <div className="text-center mb-4">
+                  <Avatar className="w-16 h-16 mx-auto mb-3 border-2 border-primary/20">
+                    <AvatarImage src={userData.avatar} />
+                    <AvatarFallback className="bg-secondary text-lg">
+                      {userData.name[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <h2 className="font-serif text-base font-medium">{userData.name}</h2>
+                  <p className="text-muted-foreground text-xs">{userData.username}</p>
+                </div>
 
-              <p className="text-sm text-center mb-6 leading-relaxed">
-                {userData.bio}
-              </p>
+                <p className="text-xs text-center mb-4 leading-relaxed">
+                  {userData.bio}
+                </p>
 
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <span>📍</span>
-                  <span>{userData.location}</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <span>🔗</span>
-                  <a href="#" className="text-primary hover:underline">
-                    {userData.website}
-                  </a>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Calendar className="w-4 h-4" />
-                  <span>{userData.joinedDate}から利用</span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-border text-center">
-                <div>
-                  <p className="font-serif font-bold text-lg">{userData.postsCount}</p>
-                  <p className="text-xs text-muted-foreground">投稿</p>
-                </div>
-                <div>
-                  <p className="font-serif font-bold text-lg">{userData.followersCount}</p>
-                  <p className="text-xs text-muted-foreground">フォロワー</p>
-                </div>
-                <div>
-                  <p className="font-serif font-bold text-lg">{userData.followingCount}</p>
-                  <p className="text-xs text-muted-foreground">フォロー中</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Photo Gallery */}
-            <div className="haiku-card p-4">
-              <h3 className="font-serif font-medium mb-4 flex items-center gap-2">
-                <span>🖼️</span>
-                フォトギャラリー
-              </h3>
-              <div className="grid grid-cols-3 gap-1.5">
-                {userPosts.map((post) => (
-                  <div 
-                    key={post.id} 
-                    className="aspect-square rounded-lg overflow-hidden cursor-pointer group"
-                  >
-                    <img
-                      src={post.image}
-                      alt="Gallery"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <span>📍</span>
+                    <span>{userData.location}</span>
                   </div>
-                ))}
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <span>🔗</span>
+                    <a href="#" className="text-primary hover:underline">
+                      {userData.website}
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Calendar className="w-3 h-3" />
+                    <span>{userData.joinedDate}から利用</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-border text-center">
+                  <div>
+                    <p className="font-serif font-bold text-sm">{userData.postsCount}</p>
+                    <p className="text-[10px] text-muted-foreground">投稿</p>
+                  </div>
+                  <div>
+                    <p className="font-serif font-bold text-sm">{userData.followersCount}</p>
+                    <p className="text-[10px] text-muted-foreground">フォロワー</p>
+                  </div>
+                  <div>
+                    <p className="font-serif font-bold text-sm">{userData.followingCount}</p>
+                    <p className="text-[10px] text-muted-foreground">フォロー中</p>
+                  </div>
+                </div>
               </div>
-              <button className="w-full mt-3 py-2 text-sm text-primary hover:bg-primary/10 rounded-lg transition-colors">
-                すべての写真を見る
-              </button>
+
+              {/* Photo Gallery */}
+              <div className="haiku-card p-3">
+                <h3 className="font-serif font-medium text-sm mb-3 flex items-center gap-2">
+                  <span>🖼️</span>
+                  フォトギャラリー
+                </h3>
+                <div className="grid grid-cols-3 gap-1">
+                  {userPosts.map((post) => (
+                    <div 
+                      key={post.id} 
+                      className="aspect-square rounded-md overflow-hidden cursor-pointer group"
+                    >
+                      <img
+                        src={post.image}
+                        alt="Gallery"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                    </div>
+                  ))}
+                </div>
+                <button className="w-full mt-2 py-1.5 text-xs text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                  すべての写真を見る
+                </button>
+              </div>
             </div>
           </aside>
         </div>
