@@ -3,17 +3,24 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { PenLine, X, LayoutTemplate, ImagePlus, ChevronLeft, ChevronRight, Upload } from "lucide-react";
+import { PenLine, X, LayoutTemplate, ImagePlus, Upload } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 
 const FONT_OPTIONS = [
-  { name: "Noto Serif JP", value: "'Noto Serif JP', serif", preview: "明朝体" },
-  { name: "Noto Sans JP", value: "'Noto Sans JP', sans-serif", preview: "ゴシック" },
-  { name: "Sawarabi Mincho", value: "'Sawarabi Mincho', serif", preview: "さわらび" },
-  { name: "Kosugi Maru", value: "'Kosugi Maru', sans-serif", preview: "小杉丸" },
-  { name: "M PLUS Rounded 1c", value: "'M PLUS Rounded 1c', sans-serif", preview: "丸ゴシック" },
-  { name: "Shippori Mincho", value: "'Shippori Mincho', serif", preview: "しっぽり" },
   { name: "Yuji Syuku", value: "'Yuji Syuku', serif", preview: "遊字書" },
+  { name: "Yuji Mai", value: "'Yuji Mai', serif", preview: "遊字舞" },
+  { name: "Yuji Boku", value: "'Yuji Boku', serif", preview: "遊字墨" },
   { name: "Zen Antique", value: "'Zen Antique', serif", preview: "禅古典" },
+  { name: "Zen Kurenaido", value: "'Zen Kurenaido', serif", preview: "禅紅" },
+  { name: "Hina Mincho", value: "'Hina Mincho', serif", preview: "雛明朝" },
+  { name: "Kaisei Decol", value: "'Kaisei Decol', serif", preview: "解星" },
+  { name: "Shippori Mincho", value: "'Shippori Mincho', serif", preview: "しっぽり" },
+  { name: "Sawarabi Mincho", value: "'Sawarabi Mincho', serif", preview: "さわらび" },
+  { name: "Noto Serif JP", value: "'Noto Serif JP', serif", preview: "明朝体" },
 ];
 
 const LAYOUT_OPTIONS = [
@@ -50,7 +57,6 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
   const [imagePreview, setImagePreview] = useState<string>("");
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const fontScrollRef = useRef<HTMLDivElement>(null);
 
   const handleLineChange = (index: number, value: string) => {
     const newLines = [...haikuLines];
@@ -98,15 +104,6 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
     }
   };
 
-  const scrollFonts = (direction: 'left' | 'right') => {
-    if (fontScrollRef.current) {
-      const scrollAmount = 200;
-      fontScrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
 
   const handleSubmit = () => {
     console.log({ haikuLines, explanation, imageFile, font: selectedFont, layout: selectedLayout, color: selectedColor });
@@ -128,59 +125,47 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
       <DialogTrigger asChild>
         {trigger}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <DialogHeader>
           <DialogTitle className="font-serif text-xl">俳句を投稿</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {/* Font Selection - Horizontal Carousel */}
+          {/* Font Selection - Carousel Slider */}
           <div className="space-y-3">
             <label className="text-sm font-medium text-foreground">フォントを選択</label>
-            <div className="relative">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 backdrop-blur-sm shadow-md hover:bg-background"
-                onClick={() => scrollFonts('left')}
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </Button>
-              
-              <div 
-                ref={fontScrollRef}
-                className="flex gap-3 overflow-x-auto scrollbar-hide px-10 py-2 scroll-smooth"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+                dragFree: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-1">
                 {FONT_OPTIONS.map((font) => (
-                  <button
-                    key={font.name}
-                    onClick={() => setSelectedFont(font)}
-                    className={`flex-shrink-0 px-4 py-3 rounded-xl border-2 transition-all min-w-[100px] ${
-                      selectedFont.name === font.name
-                        ? "border-primary bg-primary/10 shadow-lg scale-105"
-                        : "border-border hover:border-primary/50 hover:shadow-md"
-                    }`}
-                  >
-                    <span 
-                      className="text-xl block"
-                      style={{ fontFamily: font.value }}
-                    >
-                      {font.preview}
-                    </span>
-                  </button>
+                  <CarouselItem key={font.name} className="pl-1 basis-1/4">
+                    <div className="p-1">
+                      <button
+                        onClick={() => setSelectedFont(font)}
+                        className={`w-full px-3 py-3 rounded-xl border-2 transition-all ${
+                          selectedFont.name === font.name
+                            ? "border-primary bg-primary/10 shadow-lg scale-105"
+                            : "border-border hover:border-primary/50 hover:shadow-md"
+                        }`}
+                      >
+                        <span 
+                          className="text-lg block"
+                          style={{ fontFamily: font.value }}
+                        >
+                          {font.preview}
+                        </span>
+                      </button>
+                    </div>
+                  </CarouselItem>
                 ))}
-              </div>
-              
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 backdrop-blur-sm shadow-md hover:bg-background"
-                onClick={() => scrollFonts('right')}
-              >
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-            </div>
+              </CarouselContent>
+            </Carousel>
           </div>
 
           {/* Color Selection */}
@@ -193,8 +178,8 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
                   onClick={() => setSelectedColor(color)}
                   className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${
                     selectedColor.name === color.name
-                      ? "border-primary scale-110 shadow-lg"
-                      : "border-border hover:scale-105"
+                      ? "border-primary/50 scale-105"
+                      : "border-border hover:border-primary/50 hover:scale-105"
                   }`}
                   style={{ backgroundColor: color.value }}
                   title={color.name}
