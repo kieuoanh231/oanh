@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { PenLine, X, LayoutTemplate } from "lucide-react";
+import { PenLine, X, LayoutTemplate, ImagePlus, ChevronLeft, ChevronRight, Upload } from "lucide-react";
 
 const FONT_OPTIONS = [
   { name: "Noto Serif JP", value: "'Noto Serif JP', serif", preview: "明朝体" },
@@ -12,13 +12,27 @@ const FONT_OPTIONS = [
   { name: "Kosugi Maru", value: "'Kosugi Maru', sans-serif", preview: "小杉丸" },
   { name: "M PLUS Rounded 1c", value: "'M PLUS Rounded 1c', sans-serif", preview: "丸ゴシック" },
   { name: "Shippori Mincho", value: "'Shippori Mincho', serif", preview: "しっぽり" },
+  { name: "Yuji Syuku", value: "'Yuji Syuku', serif", preview: "遊字書" },
+  { name: "Zen Antique", value: "'Zen Antique', serif", preview: "禅古典" },
 ];
 
 const LAYOUT_OPTIONS = [
-  { id: "overlay", name: "画像の上", icon: "📸", description: "文字を画像の上に重ねる" },
-  { id: "below", name: "画像の下", icon: "⬇️", description: "文字を画像の下に配置" },
-  { id: "left", name: "画像の左", icon: "⬅️", description: "文字を画像の左に配置" },
-  { id: "right", name: "画像の右", icon: "➡️", description: "文字を画像の右に配置" },
+  { id: "top-left", name: "左上", icon: "↖️", position: "top-4 left-4" },
+  { id: "top-right", name: "右上", icon: "↗️", position: "top-4 right-4" },
+  { id: "center", name: "中央", icon: "⊕", position: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" },
+  { id: "bottom-left", name: "左下", icon: "↙️", position: "bottom-4 left-4" },
+  { id: "bottom-right", name: "右下", icon: "↘️", position: "bottom-4 right-4" },
+];
+
+const COLOR_OPTIONS = [
+  { name: "白", value: "#FFFFFF" },
+  { name: "墨", value: "#1a1a1a" },
+  { name: "朱", value: "#C41E3A" },
+  { name: "金", value: "#D4AF37" },
+  { name: "藍", value: "#264653" },
+  { name: "桜", value: "#FFB7C5" },
+  { name: "抹茶", value: "#88A47C" },
+  { name: "紫", value: "#6B4C8A" },
 ];
 
 interface CreatePostDialogProps {
@@ -28,10 +42,15 @@ interface CreatePostDialogProps {
 const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
   const [open, setOpen] = useState(false);
   const [selectedFont, setSelectedFont] = useState(FONT_OPTIONS[0]);
-  const [selectedLayout, setSelectedLayout] = useState(LAYOUT_OPTIONS[0]);
+  const [selectedLayout, setSelectedLayout] = useState(LAYOUT_OPTIONS[1]); // Default: top-right
+  const [selectedColor, setSelectedColor] = useState(COLOR_OPTIONS[0]);
   const [haikuLines, setHaikuLines] = useState(["", "", ""]);
   const [explanation, setExplanation] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fontScrollRef = useRef<HTMLDivElement>(null);
 
   const handleLineChange = (index: number, value: string) => {
     const newLines = [...haikuLines];
@@ -39,16 +58,67 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
     setHaikuLines(newLines);
   };
 
+  const handleImageSelect = (file: File) => {
+    if (file && file.type.startsWith('image/')) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleImageSelect(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleImageSelect(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const scrollFonts = (direction: 'left' | 'right') => {
+    if (fontScrollRef.current) {
+      const scrollAmount = 200;
+      fontScrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const handleSubmit = () => {
-    // TODO: Submit logic
-    console.log({ haikuLines, explanation, imageUrl, font: selectedFont, layout: selectedLayout });
+    console.log({ haikuLines, explanation, imageFile, font: selectedFont, layout: selectedLayout, color: selectedColor });
     setOpen(false);
     // Reset form
     setHaikuLines(["", "", ""]);
     setExplanation("");
-    setImageUrl("");
+    setImageFile(null);
+    setImagePreview("");
     setSelectedFont(FONT_OPTIONS[0]);
-    setSelectedLayout(LAYOUT_OPTIONS[0]);
+    setSelectedLayout(LAYOUT_OPTIONS[1]);
+    setSelectedColor(COLOR_OPTIONS[0]);
   };
 
   const isValid = haikuLines.every(line => line.trim()) && explanation.trim();
@@ -64,29 +134,74 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {/* Font Selection */}
+          {/* Font Selection - Horizontal Carousel */}
           <div className="space-y-3">
             <label className="text-sm font-medium text-foreground">フォントを選択</label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {FONT_OPTIONS.map((font) => (
-                <button
-                  key={font.name}
-                  onClick={() => setSelectedFont(font)}
-                  className={`p-3 rounded-lg border-2 transition-all text-center ${
-                    selectedFont.name === font.name
-                      ? "border-primary bg-primary/10"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  <span 
-                    className="text-lg block"
-                    style={{ fontFamily: font.value }}
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 backdrop-blur-sm shadow-md hover:bg-background"
+                onClick={() => scrollFonts('left')}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              
+              <div 
+                ref={fontScrollRef}
+                className="flex gap-3 overflow-x-auto scrollbar-hide px-10 py-2 scroll-smooth"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {FONT_OPTIONS.map((font) => (
+                  <button
+                    key={font.name}
+                    onClick={() => setSelectedFont(font)}
+                    className={`flex-shrink-0 px-4 py-3 rounded-xl border-2 transition-all min-w-[100px] ${
+                      selectedFont.name === font.name
+                        ? "border-primary bg-primary/10 shadow-lg scale-105"
+                        : "border-border hover:border-primary/50 hover:shadow-md"
+                    }`}
                   >
-                    {font.preview}
-                  </span>
-                  <span className="text-xs text-muted-foreground mt-1 block">
-                    {font.name}
-                  </span>
+                    <span 
+                      className="text-xl block"
+                      style={{ fontFamily: font.value }}
+                    >
+                      {font.preview}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-background/80 backdrop-blur-sm shadow-md hover:bg-background"
+                onClick={() => scrollFonts('right')}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Color Selection */}
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-foreground">文字色を選択</label>
+            <div className="flex gap-2 flex-wrap">
+              {COLOR_OPTIONS.map((color) => (
+                <button
+                  key={color.name}
+                  onClick={() => setSelectedColor(color)}
+                  className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${
+                    selectedColor.name === color.name
+                      ? "border-primary scale-110 shadow-lg"
+                      : "border-border hover:scale-105"
+                  }`}
+                  style={{ backgroundColor: color.value }}
+                  title={color.name}
+                >
+                  {selectedColor.name === color.name && (
+                    <span className={`text-xs ${color.value === '#FFFFFF' || color.value === '#FFB7C5' || color.value === '#D4AF37' ? 'text-black' : 'text-white'}`}>✓</span>
+                  )}
                 </button>
               ))}
             </div>
@@ -102,28 +217,11 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
                   placeholder={placeholder}
                   value={haikuLines[index]}
                   onChange={(e) => handleLineChange(index, e.target.value)}
-                  style={{ fontFamily: selectedFont.value }}
-                  className="text-lg py-3"
+                  style={{ fontFamily: selectedFont.value, color: selectedColor.value === '#FFFFFF' ? '#1a1a1a' : selectedColor.value }}
+                  className="text-lg py-3 bg-secondary/30"
                 />
               ))}
             </div>
-            
-            {/* Preview */}
-            {haikuLines.some(line => line.trim()) && (
-              <div className="p-4 bg-secondary/30 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-2">プレビュー:</p>
-                <div 
-                  className="flex flex-row-reverse gap-4 justify-center writing-vertical-rl"
-                  style={{ fontFamily: selectedFont.value }}
-                >
-                  {haikuLines.map((line, index) => (
-                    <span key={index} className="text-xl">
-                      {line || "..."}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Explanation */}
@@ -134,39 +232,84 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
               value={explanation}
               onChange={(e) => setExplanation(e.target.value)}
               rows={3}
+              className="bg-secondary/30"
             />
           </div>
 
-          {/* Image URL */}
+          {/* Image Upload - Facebook Style */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">画像URL (任意)</label>
-            <div className="flex gap-2">
-              <Input
-                placeholder="https://example.com/image.jpg"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                className="flex-1"
-              />
-              {imageUrl && (
+            <label className="text-sm font-medium text-foreground flex items-center gap-2">
+              <ImagePlus className="w-4 h-4" />
+              画像を追加
+            </label>
+            
+            {!imagePreview ? (
+              <div
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onClick={() => fileInputRef.current?.click()}
+                className={`relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
+                  isDragging 
+                    ? "border-primary bg-primary/10 scale-[1.02]" 
+                    : "border-border hover:border-primary/50 hover:bg-secondary/30"
+                }`}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileInput}
+                  className="hidden"
+                />
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center">
+                    <Upload className="w-8 h-8 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">画像をドラッグ＆ドロップ</p>
+                    <p className="text-sm text-muted-foreground">または クリックして選択</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="relative rounded-xl overflow-hidden group">
+                <img 
+                  src={imagePreview} 
+                  alt="Preview" 
+                  className="w-full h-64 object-cover"
+                />
+                {/* Overlay with haiku preview */}
+                <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-transparent to-black/40" />
+                
+                {/* Haiku position preview */}
+                {haikuLines.some(line => line.trim()) && (
+                  <div className={`absolute ${selectedLayout.position} flex flex-row-reverse gap-2`}>
+                    {haikuLines.map((line, index) => (
+                      <span 
+                        key={index} 
+                        className="text-lg drop-shadow-lg"
+                        style={{ 
+                          writingMode: 'vertical-rl',
+                          fontFamily: selectedFont.value,
+                          color: selectedColor.value,
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+                        }}
+                      >
+                        {line || "..."}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                
                 <Button
-                  variant="ghost"
+                  variant="destructive"
                   size="icon"
-                  onClick={() => setImageUrl("")}
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={removeImage}
                 >
                   <X className="w-4 h-4" />
                 </Button>
-              )}
-            </div>
-            {imageUrl && (
-              <div className="relative aspect-video rounded-lg overflow-hidden bg-secondary">
-                <img 
-                  src={imageUrl} 
-                  alt="Preview" 
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
               </div>
             )}
           </div>
@@ -175,25 +318,27 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
           <div className="space-y-3">
             <label className="text-sm font-medium text-foreground flex items-center gap-2">
               <LayoutTemplate className="w-4 h-4" />
-              レイアウトを選択
+              俳句の位置
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-5 gap-2">
               {LAYOUT_OPTIONS.map((layout) => (
                 <button
                   key={layout.id}
                   onClick={() => setSelectedLayout(layout)}
-                  className={`p-3 rounded-lg border-2 transition-all text-left ${
+                  className={`relative aspect-square rounded-lg border-2 transition-all overflow-hidden ${
                     selectedLayout.id === layout.id
-                      ? "border-primary bg-primary/10"
+                      ? "border-primary bg-primary/10 shadow-lg"
                       : "border-border hover:border-primary/50"
                   }`}
                 >
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg">{layout.icon}</span>
-                    <span className="font-medium text-sm">{layout.name}</span>
+                  {/* Mini preview grid */}
+                  <div className="absolute inset-1 bg-secondary/50 rounded">
+                    <div className={`absolute ${layout.position} w-2 h-4 bg-primary/70 rounded-sm`} 
+                      style={{ transform: layout.id === 'center' ? 'translate(-50%, -50%)' : 'none' }}
+                    />
                   </div>
-                  <span className="text-xs text-muted-foreground">
-                    {layout.description}
+                  <span className="absolute bottom-0 left-0 right-0 text-[10px] text-center py-0.5 bg-background/80">
+                    {layout.name}
                   </span>
                 </button>
               ))}
@@ -204,7 +349,7 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
           <Button 
             onClick={handleSubmit}
             disabled={!isValid}
-            className="w-full"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
           >
             <PenLine className="w-4 h-4 mr-2" />
             投稿する

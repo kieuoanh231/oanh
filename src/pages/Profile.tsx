@@ -351,7 +351,7 @@ const Profile = () => {
           </div>
 
           {/* Right Sidebar - Personal Info */}
-          <aside className="lg:w-72">
+          <aside className="lg:w-72 space-y-6">
             <div className="haiku-card p-6 sticky top-24">
               <div className="text-center mb-6">
                 <Avatar className="w-24 h-24 mx-auto mb-4 border-4 border-primary/20">
@@ -399,10 +399,31 @@ const Profile = () => {
                   <p className="text-xs text-muted-foreground">フォロー中</p>
                 </div>
               </div>
+            </div>
 
-              <Button className="w-full mt-6" variant="outline">
-                プロフィールを編集
-              </Button>
+            {/* Photo Gallery */}
+            <div className="haiku-card p-4">
+              <h3 className="font-serif font-medium mb-4 flex items-center gap-2">
+                <span>🖼️</span>
+                フォトギャラリー
+              </h3>
+              <div className="grid grid-cols-3 gap-1.5">
+                {userPosts.map((post) => (
+                  <div 
+                    key={post.id} 
+                    className="aspect-square rounded-lg overflow-hidden cursor-pointer group"
+                  >
+                    <img
+                      src={post.image}
+                      alt="Gallery"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                  </div>
+                ))}
+              </div>
+              <button className="w-full mt-3 py-2 text-sm text-primary hover:bg-primary/10 rounded-lg transition-colors">
+                すべての写真を見る
+              </button>
             </div>
           </aside>
         </div>
