@@ -195,11 +195,11 @@ const Profile = () => {
                         <div className="absolute inset-0 bg-gradient-to-bl from-black/50 via-transparent to-black/50" />
                         
                         {/* Haiku - Top Right */}
-                        <div className="absolute top-4 right-4 flex flex-row-reverse items-start gap-2">
+                        <div className="absolute top-4 right-4 flex flex-row-reverse items-start gap-3">
                           {post.lines.map((line, i) => (
                             <p 
                               key={i} 
-                              className="text-white text-lg drop-shadow-lg"
+                              className="text-white text-xl drop-shadow-lg"
                               style={{ 
                                 writingMode: 'vertical-rl',
                                 fontFamily: '"Yuji Syuku", serif',
