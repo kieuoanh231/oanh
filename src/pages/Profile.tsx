@@ -275,12 +275,12 @@ const Profile = () => {
                       </div>
                       <div className="flex-1 flex flex-col">
                         {/* Haiku section with calligraphy font */}
-                        <div className="flex-1 p-4 flex justify-center items-center">
-                          <div className="flex flex-row-reverse items-start gap-3">
+                        <div className="flex-1 p-4 flex justify-center items-start pt-8">
+                          <div className="flex flex-row-reverse items-start gap-4">
                             {post.lines.map((line, i) => (
                               <p 
                                 key={i} 
-                                className="text-foreground text-xl tracking-wider leading-loose"
+                                className="text-foreground text-2xl tracking-wider leading-loose"
                                 style={{ 
                                   writingMode: 'vertical-rl',
                                   fontFamily: '"Yuji Syuku", serif'
@@ -291,7 +291,7 @@ const Profile = () => {
                             ))}
                             {/* Vertical date in Japanese at end of haiku */}
                             <p 
-                              className="text-muted-foreground text-xs self-end"
+                              className="text-muted-foreground text-xs mt-12"
                               style={{ 
                                 writingMode: 'vertical-rl',
                                 fontFamily: '"Noto Serif JP", serif'
