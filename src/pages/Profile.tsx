@@ -264,13 +264,13 @@ const Profile = () => {
                     </div>
                   ) : (
                     // List View - Larger with dynamic height
-                    <div className="flex">
+                    <div className="flex min-h-[280px]">
                       {/* Image takes ~40% width */}
                       <div className="w-[40%] flex-shrink-0">
                         <img
                           src={post.image}
                           alt="Haiku"
-                          className="w-full h-full object-cover min-h-[180px]"
+                          className="w-full h-full object-cover"
                         />
                       </div>
                       <div className="flex-1 flex flex-col">
