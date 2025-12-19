@@ -172,22 +172,14 @@ const Profile = () => {
 
             {/* Posts */}
             <div className={viewMode === "grid" 
-              ? "grid grid-cols-1 sm:grid-cols-2 gap-3" 
-              : "space-y-6"
+              ? "grid grid-cols-1 sm:grid-cols-2 gap-4" 
+              : "space-y-4"
             }>
-              {userPosts.map((post, index) => (
-                <div key={post.id}>
-                  {/* Decorative separator between posts */}
-                  {index > 0 && viewMode === "list" && (
-                    <div className="flex items-center justify-center gap-4 mb-6">
-                      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
-                      <div className="flex items-center gap-2 text-muted-foreground/50">
-                        <span className="text-lg">❋</span>
-                      </div>
-                      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
-                    </div>
-                  )}
-                <div key={post.id} className="haiku-card overflow-hidden">
+              {userPosts.map((post) => (
+                <div 
+                  key={post.id} 
+                  className="haiku-card overflow-hidden border-2 border-border/50 rounded-xl shadow-md hover:shadow-lg hover:border-primary/30 transition-all duration-300 bg-card"
+                >
                   {viewMode === "grid" ? (
                     // Grid View with hover zoom
                     <div 
@@ -358,7 +350,6 @@ const Profile = () => {
                     </div>
                   )}
                 </div>
-              </div>
               ))}
             </div>
           </div>
