@@ -206,16 +206,16 @@ const CommentPopup = ({ open, onOpenChange, post }: CommentPopupProps) => {
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto overscroll-contain">
+        <div className="flex-1 overflow-y-auto overscroll-contain scrollbar-hide">
           {/* Post Image with Haiku - Compact */}
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-bl from-black/50 via-transparent to-black/40 z-10 pointer-events-none" />
             <img
               src={post.image}
               alt="Haiku illustration"
               className="w-full aspect-[16/10] object-cover"
             />
-            {/* Haiku Text Overlay */}
+            {/* Haiku Text Overlay - Top Right */}
             <div className="absolute top-3 right-3 z-20">
               <div className="flex flex-row-reverse gap-2">
                 {post.haiku.map((line, index) => (
@@ -234,26 +234,45 @@ const CommentPopup = ({ open, onOpenChange, post }: CommentPopupProps) => {
               </div>
             </div>
             
-            {/* Bottom gradient info */}
-            <div className="absolute bottom-0 left-0 right-0 z-20 p-3">
-              <button
-                onClick={() => setShowExplanation(!showExplanation)}
-                className="flex items-center gap-1 text-white/80 text-xs hover:text-white transition-colors"
+            {/* Japanese Date - Bottom Left (like home page) */}
+            <div className="absolute bottom-3 left-3 z-20">
+              <p 
+                className="text-white/90 text-xs tracking-wider"
+                style={{ 
+                  writingMode: 'vertical-rl',
+                  fontFamily: '"Yuji Syuku", serif',
+                  textShadow: '1px 1px 4px rgba(0,0,0,0.8)'
+                }}
               >
-                {showExplanation ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                <span>解説を{showExplanation ? '隠す' : '見る'}</span>
-              </button>
+                {post.timestamp}
+              </p>
             </div>
           </div>
 
-          {/* Explanation - Collapsible */}
-          {showExplanation && (
-            <div className="px-4 py-3 bg-secondary/20 border-b border-border/30 animate-fade-in">
-              <p className="text-sm text-muted-foreground leading-relaxed">
+          {/* Explanation Toggle - Below Image */}
+          <div className="px-4 py-3 border-b border-border/30">
+            <button
+              onClick={() => setShowExplanation(!showExplanation)}
+              className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mb-2"
+            >
+              {showExplanation ? (
+                <>
+                  <ChevronUp className="w-3 h-3" />
+                  <span>解説を隠す</span>
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-3 h-3" />
+                  <span>解説を表示</span>
+                </>
+              )}
+            </button>
+            {showExplanation && (
+              <p className="text-sm text-muted-foreground leading-relaxed animate-fade-in pl-2 border-l-2 border-primary/30">
                 {post.explanation}
               </p>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Action Buttons */}
           <div className="px-4 py-2 flex items-center justify-between border-b border-border/30">
