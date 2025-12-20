@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Heart, MessageCircle, Share2, Bookmark, ChevronDown, ChevronUp } from "lucide-react";
-import CommentSection from "./CommentSection";
+import CommentPopup from "./CommentPopup";
 
 interface HaikuPostProps {
   id: number;
@@ -206,8 +206,20 @@ const HaikuPost = ({
         </button>
       </div>
 
-      {/* Comments Section */}
-      {showComments && <CommentSection />}
+      {/* Comment Popup */}
+      <CommentPopup 
+        open={showComments} 
+        onOpenChange={setShowComments}
+        post={{
+          haiku,
+          image,
+          author,
+          timestamp,
+          explanation,
+          likes: likeCount,
+          comments,
+        }}
+      />
     </article>
   );
 };

@@ -1,4 +1,4 @@
-import { Search, Bell, PenLine, User, LogIn, UserPlus, LogOut, Settings, Heart, MessageCircle, UserCheck, Sparkles } from "lucide-react";
+import { Search, Bell, PenLine, User, LogIn, UserPlus, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import CreatePostDialog from "./CreatePostDialog";
@@ -69,20 +69,6 @@ const notifications = [
   },
 ];
 
-const getNotificationIcon = (type: string) => {
-  switch (type) {
-    case "like":
-      return <Heart className="w-4 h-4 text-rose-500" />;
-    case "comment":
-      return <MessageCircle className="w-4 h-4 text-blue-500" />;
-    case "follow":
-      return <UserCheck className="w-4 h-4 text-emerald-500" />;
-    case "feature":
-      return <Sparkles className="w-4 h-4 text-amber-500" />;
-    default:
-      return <Bell className="w-4 h-4 text-muted-foreground" />;
-  }
-};
 
 const Header = () => {
   const navigate = useNavigate();
@@ -175,10 +161,6 @@ const Header = () => {
                               )}
                             </div>
                             
-                            {/* Icon */}
-                            <div className="flex-shrink-0 mt-0.5">
-                              {getNotificationIcon(notification.type)}
-                            </div>
                           </div>
                           
                           {/* Time */}
