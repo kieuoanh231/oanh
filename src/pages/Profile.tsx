@@ -178,7 +178,7 @@ const Profile = () => {
               {userPosts.map((post) => (
                 <div 
                   key={post.id} 
-                  className="haiku-card overflow-hidden border-2 border-border/50 rounded-xl shadow-md hover:shadow-lg hover:border-primary/30 transition-all duration-300 bg-card"
+                  className="haiku-card overflow-hidden border-2 border-border/50 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 bg-card"
                 >
                   {viewMode === "grid" ? (
                     // Grid View with hover zoom
