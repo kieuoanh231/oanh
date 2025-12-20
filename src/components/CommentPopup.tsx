@@ -35,6 +35,30 @@ interface CommentPopupProps {
   post: PostData;
 }
 
+// Convert number to kanji
+const toKanjiNumber = (num: number): string => {
+  const kanjiDigits = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+  
+  if (num === 0) return kanjiDigits[0];
+  if (num < 10) return kanjiDigits[num];
+  if (num < 100) {
+    const tens = Math.floor(num / 10);
+    const ones = num % 10;
+    const tensStr = tens === 1 ? '十' : kanjiDigits[tens] + '十';
+    return tensStr + (ones > 0 ? kanjiDigits[ones] : '');
+  }
+  return String(num);
+};
+
+// Convert to Japanese era date (Reiwa format) with kanji numbers
+const toJapaneseEraDate = (): string => {
+  const now = new Date();
+  const reiwaYear = now.getFullYear() - 2018;
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  return `令和${toKanjiNumber(reiwaYear)}年${toKanjiNumber(month)}月${toKanjiNumber(day)}日`;
+};
+
 // More sample comments for scrolling demo
 const sampleComments: Comment[] = [
   {
@@ -221,7 +245,7 @@ const CommentPopup = ({ open, onOpenChange, post }: CommentPopupProps) => {
                 {post.haiku.map((line, index) => (
                   <p 
                     key={index} 
-                    className="text-white text-lg tracking-widest leading-relaxed"
+                    className="text-white text-2xl md:text-3xl tracking-widest leading-relaxed"
                     style={{ 
                       writingMode: 'vertical-rl',
                       fontFamily: '"Yuji Syuku", serif',
@@ -237,14 +261,14 @@ const CommentPopup = ({ open, onOpenChange, post }: CommentPopupProps) => {
             {/* Japanese Date - Bottom Left (like home page) */}
             <div className="absolute bottom-3 left-3 z-20">
               <p 
-                className="text-white/90 text-xs tracking-wider"
+                className="text-white/90 text-sm tracking-wider"
                 style={{ 
                   writingMode: 'vertical-rl',
                   fontFamily: '"Yuji Syuku", serif',
                   textShadow: '1px 1px 4px rgba(0,0,0,0.8)'
                 }}
               >
-                {post.timestamp}
+                {toJapaneseEraDate()}
               </p>
             </div>
           </div>
