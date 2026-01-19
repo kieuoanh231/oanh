@@ -1,11 +1,12 @@
 import { Home, Compass, Bookmark, Clock, TrendingUp, Hash } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
-  { icon: Home, label: "ホーム", active: true },
-  { icon: Compass, label: "発見" },
-  { icon: TrendingUp, label: "トレンド" },
-  { icon: Bookmark, label: "保存済み" },
-  { icon: Clock, label: "履歴" },
+  { icon: Home, label: "ホーム", path: "/" },
+  { icon: Compass, label: "発見", path: "/discover" },
+  { icon: TrendingUp, label: "トレンド", path: "/trending" },
+  { icon: Bookmark, label: "保存済み", path: "/saved" },
+  { icon: Clock, label: "履歴", path: "/history" },
 ];
 
 const trendingTopics = [
@@ -16,24 +17,30 @@ const trendingTopics = [
 ];
 
 const Sidebar = () => {
+  const location = useLocation();
+
   return (
     <aside className="hidden lg:block w-64 flex-shrink-0">
       <div className="sticky top-20 space-y-6">
         {/* Navigation */}
         <nav className="bg-card rounded-lg p-3 shadow-sm">
-          {navItems.map((item) => (
-            <button
-              key={item.label}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${
-                item.active
-                  ? "bg-primary/10 text-primary font-medium"
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-              }`}
-            >
-              <item.icon className="w-5 h-5" />
-              <span>{item.label}</span>
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={item.label}
+                to={item.path}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${
+                  isActive
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                }`}
+              >
+                <item.icon className="w-5 h-5" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Trending Topics */}
