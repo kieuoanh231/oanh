@@ -158,6 +158,13 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
     }
   };
 
+  const applyTemplate = (template: typeof TEMPLATE_OPTIONS[0]) => {
+    setSelectedFont(FONT_OPTIONS[template.fontIndex]);
+    setSelectedColor(COLOR_OPTIONS[template.colorIndex]);
+    setSelectedLayout(LAYOUT_OPTIONS[template.layoutIndex]);
+    setImagePreview(template.image);
+    setImageFile(null);
+  };
 
   const handleSubmit = () => {
     console.log({ haikuLines, explanation, imageFile, font: selectedFont, layout: selectedLayout, color: selectedColor });
