@@ -51,6 +51,55 @@ interface CreatePostDialogProps {
   trigger: React.ReactNode;
 }
 
+// Preset templates: background + font + color + layout — perfect for beginners
+const TEMPLATE_OPTIONS = [
+  {
+    id: "sakura",
+    name: "桜",
+    description: "春・優美",
+    image: templateSakura,
+    fontIndex: 0, // Yuji Syuku
+    colorIndex: 1, // 墨
+    layoutIndex: 0, // top-left
+  },
+  {
+    id: "mountain",
+    name: "山霧",
+    description: "静寂・荘厳",
+    image: templateMountain,
+    fontIndex: 5, // Hina Mincho
+    colorIndex: 1, // 墨
+    layoutIndex: 1, // top-right
+  },
+  {
+    id: "bamboo",
+    name: "竹",
+    description: "清涼・若々",
+    image: templateBamboo,
+    fontIndex: 8, // Sawarabi Mincho
+    colorIndex: 6, // 抹茶
+    layoutIndex: 0, // top-left
+  },
+  {
+    id: "moon",
+    name: "月夜",
+    description: "夜・幻想",
+    image: templateMoon,
+    fontIndex: 1, // Yuji Mai
+    colorIndex: 0, // 白
+    layoutIndex: 1, // top-right
+  },
+  {
+    id: "washi",
+    name: "和紙",
+    description: "シンプル",
+    image: templateWashi,
+    fontIndex: 9, // Noto Serif JP
+    colorIndex: 1, // 墨
+    layoutIndex: 2, // center
+  },
+];
+
 const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
   const [open, setOpen] = useState(false);
   const [selectedFont, setSelectedFont] = useState(FONT_OPTIONS[0]);
