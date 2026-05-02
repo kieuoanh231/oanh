@@ -3,12 +3,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { PenLine, X, LayoutTemplate, ImagePlus, Upload } from "lucide-react";
+import { PenLine, X, LayoutTemplate, ImagePlus, Upload, Sparkles } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import templateSakura from "@/assets/template-sakura.jpg";
+import templateMountain from "@/assets/template-mountain.jpg";
+import templateBamboo from "@/assets/template-bamboo.jpg";
+import templateMoon from "@/assets/template-moon.jpg";
+import templateWashi from "@/assets/template-washi.jpg";
 
 const FONT_OPTIONS = [
   { name: "Yuji Syuku", value: "'Yuji Syuku', serif", preview: "遊字書" },
@@ -45,6 +50,55 @@ const COLOR_OPTIONS = [
 interface CreatePostDialogProps {
   trigger: React.ReactNode;
 }
+
+// Preset templates: background + font + color + layout — perfect for beginners
+const TEMPLATE_OPTIONS = [
+  {
+    id: "sakura",
+    name: "桜",
+    description: "春・優美",
+    image: templateSakura,
+    fontIndex: 0, // Yuji Syuku
+    colorIndex: 1, // 墨
+    layoutIndex: 0, // top-left
+  },
+  {
+    id: "mountain",
+    name: "山霧",
+    description: "静寂・荘厳",
+    image: templateMountain,
+    fontIndex: 5, // Hina Mincho
+    colorIndex: 1, // 墨
+    layoutIndex: 1, // top-right
+  },
+  {
+    id: "bamboo",
+    name: "竹",
+    description: "清涼・若々",
+    image: templateBamboo,
+    fontIndex: 8, // Sawarabi Mincho
+    colorIndex: 6, // 抹茶
+    layoutIndex: 0, // top-left
+  },
+  {
+    id: "moon",
+    name: "月夜",
+    description: "夜・幻想",
+    image: templateMoon,
+    fontIndex: 1, // Yuji Mai
+    colorIndex: 0, // 白
+    layoutIndex: 1, // top-right
+  },
+  {
+    id: "washi",
+    name: "和紙",
+    description: "シンプル",
+    image: templateWashi,
+    fontIndex: 9, // Noto Serif JP
+    colorIndex: 1, // 墨
+    layoutIndex: 2, // center
+  },
+];
 
 const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
   const [open, setOpen] = useState(false);
@@ -104,6 +158,13 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
     }
   };
 
+  const applyTemplate = (template: typeof TEMPLATE_OPTIONS[0]) => {
+    setSelectedFont(FONT_OPTIONS[template.fontIndex]);
+    setSelectedColor(COLOR_OPTIONS[template.colorIndex]);
+    setSelectedLayout(LAYOUT_OPTIONS[template.layoutIndex]);
+    setImagePreview(template.image);
+    setImageFile(null);
+  };
 
   const handleSubmit = () => {
     console.log({ haikuLines, explanation, imageFile, font: selectedFont, layout: selectedLayout, color: selectedColor });
@@ -131,6 +192,76 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
         </DialogHeader>
 
         <div className="space-y-6 py-4">
+          {/* Templates - Quick start for beginners */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-foreground flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                テンプレート
+                <span className="text-xs text-muted-foreground font-normal">（初心者におすすめ）</span>
+              </label>
+            </div>
+            <Carousel
+              opts={{ align: "start", dragFree: true }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2">
+                {TEMPLATE_OPTIONS.map((template) => {
+                  const tplFont = FONT_OPTIONS[template.fontIndex];
+                  const tplColor = COLOR_OPTIONS[template.colorIndex];
+                  const tplLayout = LAYOUT_OPTIONS[template.layoutIndex];
+                  const isActive = imagePreview === template.image;
+                  return (
+                    <CarouselItem key={template.id} className="pl-2 basis-1/3">
+                      <button
+                        onClick={() => applyTemplate(template)}
+                        className={`group relative w-full aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all ${
+                          isActive
+                            ? "border-primary shadow-lg scale-[1.02]"
+                            : "border-border hover:border-primary/50 hover:shadow-md"
+                        }`}
+                      >
+                        <img
+                          src={template.image}
+                          alt={template.name}
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                        {/* Sample haiku preview */}
+                        <div className={`absolute ${tplLayout.position} flex flex-row-reverse gap-1`}>
+                          {["古池や", "蛙飛び込む", "水の音"].map((line, i) => (
+                            <span
+                              key={i}
+                              className="text-[10px] drop-shadow"
+                              style={{
+                                writingMode: "vertical-rl",
+                                fontFamily: tplFont.value,
+                                color: tplColor.value,
+                                textShadow: tplColor.value === "#FFFFFF" ? "1px 1px 2px rgba(0,0,0,0.5)" : "none",
+                              }}
+                            >
+                              {line}
+                            </span>
+                          ))}
+                        </div>
+                        {/* Label */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5">
+                          <p className="text-xs font-medium text-white text-left">{template.name}</p>
+                          <p className="text-[10px] text-white/80 text-left">{template.description}</p>
+                        </div>
+                        {isActive && (
+                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                            <span className="text-[10px] text-primary-foreground">✓</span>
+                          </div>
+                        )}
+                      </button>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+            </Carousel>
+          </div>
+
           {/* Font Selection - Carousel Slider */}
           <div className="space-y-3">
             <label className="text-sm font-medium text-foreground">フォントを選択</label>
