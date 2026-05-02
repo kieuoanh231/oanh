@@ -192,6 +192,76 @@ const CreatePostDialog = ({ trigger }: CreatePostDialogProps) => {
         </DialogHeader>
 
         <div className="space-y-6 py-4">
+          {/* Templates - Quick start for beginners */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-foreground flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                テンプレート
+                <span className="text-xs text-muted-foreground font-normal">（初心者におすすめ）</span>
+              </label>
+            </div>
+            <Carousel
+              opts={{ align: "start", dragFree: true }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2">
+                {TEMPLATE_OPTIONS.map((template) => {
+                  const tplFont = FONT_OPTIONS[template.fontIndex];
+                  const tplColor = COLOR_OPTIONS[template.colorIndex];
+                  const tplLayout = LAYOUT_OPTIONS[template.layoutIndex];
+                  const isActive = imagePreview === template.image;
+                  return (
+                    <CarouselItem key={template.id} className="pl-2 basis-1/3">
+                      <button
+                        onClick={() => applyTemplate(template)}
+                        className={`group relative w-full aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all ${
+                          isActive
+                            ? "border-primary shadow-lg scale-[1.02]"
+                            : "border-border hover:border-primary/50 hover:shadow-md"
+                        }`}
+                      >
+                        <img
+                          src={template.image}
+                          alt={template.name}
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                        {/* Sample haiku preview */}
+                        <div className={`absolute ${tplLayout.position} flex flex-row-reverse gap-1`}>
+                          {["古池や", "蛙飛び込む", "水の音"].map((line, i) => (
+                            <span
+                              key={i}
+                              className="text-[10px] drop-shadow"
+                              style={{
+                                writingMode: "vertical-rl",
+                                fontFamily: tplFont.value,
+                                color: tplColor.value,
+                                textShadow: tplColor.value === "#FFFFFF" ? "1px 1px 2px rgba(0,0,0,0.5)" : "none",
+                              }}
+                            >
+                              {line}
+                            </span>
+                          ))}
+                        </div>
+                        {/* Label */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5">
+                          <p className="text-xs font-medium text-white text-left">{template.name}</p>
+                          <p className="text-[10px] text-white/80 text-left">{template.description}</p>
+                        </div>
+                        {isActive && (
+                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                            <span className="text-[10px] text-primary-foreground">✓</span>
+                          </div>
+                        )}
+                      </button>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+            </Carousel>
+          </div>
+
           {/* Font Selection - Carousel Slider */}
           <div className="space-y-3">
             <label className="text-sm font-medium text-foreground">フォントを選択</label>
