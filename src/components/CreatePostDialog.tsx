@@ -3,12 +3,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { PenLine, X, LayoutTemplate, ImagePlus, Upload } from "lucide-react";
+import { PenLine, X, LayoutTemplate, ImagePlus, Upload, Sparkles } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import templateSakura from "@/assets/template-sakura.jpg";
+import templateMountain from "@/assets/template-mountain.jpg";
+import templateBamboo from "@/assets/template-bamboo.jpg";
+import templateMoon from "@/assets/template-moon.jpg";
+import templateWashi from "@/assets/template-washi.jpg";
 
 const FONT_OPTIONS = [
   { name: "Yuji Syuku", value: "'Yuji Syuku', serif", preview: "遊字書" },
